@@ -94,7 +94,7 @@ unset($_SESSION['flash']);
 
       <div class="form-wrap" id="form-wrap">
         
-        <form id="form-login" action="proses/prosesLogin.php" method="POST" class="form-slide in space-y-4">
+        <form id="form-login" action="/proses/prosesLogin.php" method="POST" class="form-slide in space-y-4">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
           <div>
             <label for="login-identitas">NIK / No. WhatsApp</label>
@@ -111,7 +111,7 @@ unset($_SESSION['flash']);
           <button type="submit" class="clay-btn w-full py-3.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm">Masuk ke Sistem →</button>
         </form>
 
-        <form id="form-register" action="proses/prosesRegister.php" method="POST" class="form-slide out-right space-y-4">
+        <form id="form-register" action="/proses/prosesRegister.php" method="POST" class="form-slide out-right space-y-4">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
           <div>
             <label for="reg-nik">NIK (Wajib 16 Digit)</label>
@@ -177,7 +177,7 @@ unset($_SESSION['flash']);
       <h3 class="font-extrabold text-gray-800 text-lg mb-1 text-center">Lupa Password 🔐</h3>
       <p class="text-gray-400 text-[11px] mb-5 text-center leading-relaxed">Verifikasi identitas Anda dengan memasukkan NIK dan No. WhatsApp yang terdaftar untuk mereset sandi.</p>
       
-      <form action="proses/prosesReset.php" method="POST" class="space-y-3">
+      <form action="/proses/prosesReset.php" method="POST" class="space-y-3">
       <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
         <div>
           <label class="text-xs font-bold text-gray-600 mb-1 block">NIK KTP (16 Digit)</label>
