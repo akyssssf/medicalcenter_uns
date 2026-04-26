@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../server/koneksi.php';
+include '../server/koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header("Location: ../survei.php"); exit(); }
 if (!isset($_SESSION['nik'])) { header("Location: ../login.php"); exit(); }
