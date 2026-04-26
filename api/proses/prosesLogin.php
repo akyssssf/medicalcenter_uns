@@ -2,6 +2,23 @@
 session_start();
 include __DIR__ . '/../server/koneksi.php';
 
+// DEBUG TEMPORARY
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Test koneksi
+if (!$koneksi) {
+    die("KONEKSI GAGAL: " . mysqli_connect_error());
+}
+
+// Test query
+$test = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM users");
+if (!$test) {
+    die("QUERY GAGAL: " . mysqli_error($koneksi));
+}
+$row = mysqli_fetch_assoc($test);
+die("KONEKSI OK - Total users: " . $row['total']);
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: /login.php"); exit();
 }
