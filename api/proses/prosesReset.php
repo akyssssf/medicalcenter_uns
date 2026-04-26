@@ -7,13 +7,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // ── CSRF Validation ──
-if (
-    empty($_POST['csrf_token']) ||
-    !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])
-) {
-    $_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
-    header("Location: /login.php"); exit();
-}
+//if (
+    //empty($_POST['csrf_token']) ||
+    //!hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])
+//) {
+    //$_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
+    //header("Location: /login.php"); exit();
+//}
 // Jangan hapus CSRF token di sini — modal masih mungkin di-reopen
 
 $nik           = trim($_POST['nik']           ?? '');

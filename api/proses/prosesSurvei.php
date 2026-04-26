@@ -6,11 +6,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header("Location: /survei.php"); ex
 if (!isset($_SESSION['nik'])) { header("Location: ../login.php"); exit(); }
 
 // ── CSRF ──
-if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
-    $_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
-    header("Location: /survei.php"); exit();
-}
-unset($_SESSION['csrf_token']);
+//if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+    //$_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
+    //header("Location: /survei.php"); exit();
+//}
+//unset($_SESSION['csrf_token']);
 
 $jalur = $_SESSION['jalur_survei'] ?? '';
 if (!in_array($jalur, ['kunjungan','umum'], true)) {

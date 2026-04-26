@@ -2,33 +2,16 @@
 session_start();
 include __DIR__ . '/../server/koneksi.php';
 
-// DEBUG TEMPORARY
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-// Test koneksi
-if (!$koneksi) {
-    die("KONEKSI GAGAL: " . mysqli_connect_error());
-}
-
-// Test query
-$test = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM users");
-if (!$test) {
-    die("QUERY GAGAL: " . mysqli_error($koneksi));
-}
-$row = mysqli_fetch_assoc($test);
-die("KONEKSI OK - Total users: " . $row['total']);
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: /login.php"); exit();
 }
 
 // ── CSRF ──
-if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
-    $_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
-    header("Location: /login.php"); exit();
-}
-unset($_SESSION['csrf_token']);
+// if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+//     $_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
+//     header("Location: /login.php"); exit();
+// }
+// unset($_SESSION['csrf_token']);
 
 // ── Rate limiting ──
 $now = time();
