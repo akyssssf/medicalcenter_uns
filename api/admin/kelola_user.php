@@ -1,6 +1,5 @@
 <?php
-session_start();
-include '../../server/koneksi.php';
+require_once __DIR__ . "/../server/bootstrap.php";
 
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
     header("Location: /login.php"); exit();
@@ -55,7 +54,7 @@ unset($_SESSION['flash']);
   <nav class="clay-nav sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <a href="dashboard.php" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition text-base" title="Kembali">←</a>
+        <a href="/admin/dashboard.php" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition text-base" title="Kembali">←</a>
         <div>
           <p class="font-extrabold text-gray-800">Kelola Data Pasien</p>
           <p class="text-xs text-gray-400">Total <?php echo $total; ?> pasien terdaftar</p>
@@ -117,7 +116,7 @@ unset($_SESSION['flash']);
   </main>
 
   <!-- Hidden form untuk POST delete -->
-  <form id="form-hapus" method="POST" action="kelola_user.php" style="display:none;">
+  <form id="form-hapus" method="POST" action="/admin/kelola_user.php" style="display:none;">
     <input type="hidden" name="hapus_id" id="hapus-id-input">
   </form>
 

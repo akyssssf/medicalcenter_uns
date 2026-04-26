@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . "/server/bootstrap.php";
 
 if (!isset($_SESSION['nik'])) { header("Location: /login.php"); exit(); }
 
@@ -459,7 +459,7 @@ $total_steps = $is_kunjungan ? 3 : 3;
       <?php endfor; ?>
     </div>
 
-    <form id="survey-form" action="proses/prosesSurvei.php" method="POST">
+    <form id="survey-form" action="/proses/prosesSurvei.php" method="POST">
       <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
       <input type="hidden" name="jalur" value="<?php echo $jalur; ?>">
       <input type="hidden" name="poli" value="<?php echo htmlspecialchars($poli ?? 'Umum'); ?>">

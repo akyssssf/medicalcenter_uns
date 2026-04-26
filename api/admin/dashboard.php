@@ -1,9 +1,8 @@
 <?php
-session_start();
+require_once __DIR__ . "/../server/bootstrap.php";
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
     header("Location: /login.php"); exit();
 }
-include '../../server/koneksi.php';
 
 // Ambil statistik ringkas
 $total_users = 0; $total_survei = 0; $avg_global = '0.00';
@@ -99,7 +98,7 @@ if ($r2) { $row2 = mysqli_fetch_assoc($r2); $total_survei = $row2['cnt']; $avg_g
     <!-- MENU CARDS -->
     <h2 class="text-base font-bold text-gray-700 mb-4">Menu Pengelolaan</h2>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-      <a href="kelola_user.php" class="menu-card group">
+      <a href="/admin/kelola_user.php" class="menu-card group">
         <div class="menu-icon bg-blue-50 group-hover:bg-blue-100 transition">👥</div>
         <h2 class="font-extrabold text-gray-800">Kelola Pasien</h2>
         <p class="text-xs text-gray-400">Lihat dan hapus data pasien terdaftar.</p>
@@ -108,7 +107,7 @@ if ($r2) { $row2 = mysqli_fetch_assoc($r2); $total_survei = $row2['cnt']; $avg_g
         </span>
       </a>
 
-      <a href="kelola_admin.php" class="menu-card group">
+      <a href="/admin/kelola_admin.php" class="menu-card group">
         <div class="menu-icon bg-purple-50 group-hover:bg-purple-100 transition">🛡️</div>
         <h2 class="font-extrabold text-gray-800">Kelola Admin</h2>
         <p class="text-xs text-gray-400">Tambah atau cabut akses administrator.</p>
@@ -117,7 +116,7 @@ if ($r2) { $row2 = mysqli_fetch_assoc($r2); $total_survei = $row2['cnt']; $avg_g
         </span>
       </a>
 
-      <a href="kelola_survei.php" class="menu-card group">
+      <a href="/admin/kelola_survei.php" class="menu-card group">
         <div class="menu-icon bg-green-50 group-hover:bg-green-100 transition">📊</div>
         <h2 class="font-extrabold text-gray-800">Laporan Survei</h2>
         <p class="text-xs text-gray-400">Pantau dan analisis hasil penilaian pasien.</p>
@@ -129,7 +128,7 @@ if ($r2) { $row2 = mysqli_fetch_assoc($r2); $total_survei = $row2['cnt']; $avg_g
 
   </main>
 
-  <form id="form-logout" action="../proses/logout.php" method="POST" style="display:none;"></form>
+  <form id="form-logout" action="/proses/logout.php" method="POST" style="display:none;"></form>
 
   <script>
     function confirmLogout() {

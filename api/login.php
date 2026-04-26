@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . "/server/bootstrap.php";
 if (isset($_SESSION['email']) || isset($_SESSION['nik'])) {
     header("Location: index.php");
     exit();

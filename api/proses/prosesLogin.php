@@ -1,6 +1,5 @@
 <?php
-session_start();
-include __DIR__ . '/../server/koneksi.php';
+require_once __DIR__ . "/../server/bootstrap.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: /login.php"); exit();

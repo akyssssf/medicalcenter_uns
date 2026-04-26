@@ -1,9 +1,8 @@
 <?php
-session_start();
-include __DIR__ . '/../server/koneksi.php';
+require_once __DIR__ . "/../server/bootstrap.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header("Location: /survei.php"); exit(); }
-if (!isset($_SESSION['nik'])) { header("Location: ../login.php"); exit(); }
+if (!isset($_SESSION['nik'])) { header("Location: /login.php"); exit(); }
 
 // ── CSRF ──
 ////if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {

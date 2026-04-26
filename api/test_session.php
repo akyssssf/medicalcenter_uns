@@ -1,11 +1,10 @@
 <?php
-session_start();
+require_once __DIR__ . '/server/bootstrap.php';
 
-if (isset($_GET['set'])) {
-    $_SESSION['test'] = 'hello';
-    echo "Session SET: " . $_SESSION['test'];
-} else {
-    echo "Session value: " . ($_SESSION['test'] ?? 'KOSONG');
-}
-echo "<br>Session ID: " . session_id();
-?>
+// Halaman test sederhana (bisa dihapus di production)
+echo json_encode([
+    'session_id' => session_id(),
+    'session_status' => session_status(),
+    'session_data' => $_SESSION,
+    'db_connected' => isset($koneksi) ? true : false,
+]);

@@ -1,9 +1,8 @@
 <?php
-session_start();
-include __DIR__ . '/../server/koneksi.php';
+require_once __DIR__ . "/../server/bootstrap.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header("Location: /dashboard.php"); exit(); }
-if (!isset($_SESSION['nik'])) { header("Location: ../login.php"); exit(); }
+if (!isset($_SESSION['nik'])) { header("Location: /login.php"); exit(); }
 
 $nik   = $_SESSION['nik'];
 $jalur = trim($_POST['jalur'] ?? '');

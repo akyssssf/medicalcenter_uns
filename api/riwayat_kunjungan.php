@@ -1,6 +1,5 @@
 <?php
-session_start();
-include __DIR__ . '/server/koneksi.php';
+require_once __DIR__ . "/server/bootstrap.php";
 
 if (!isset($_SESSION['nik'])) { header("Location: login.php"); exit(); }
 
@@ -265,7 +264,7 @@ foreach ($kunjungan_list as $k) {
 <nav class="top-nav">
   <div class="nav-inner">
     <div class="nav-left">
-      <a href="dashboard.php" class="btn-back-nav">←</a>
+      <a href="/dashboard.php" class="btn-back-nav">←</a>
       <div>
         <div class="nav-title-main">Riwayat Kunjungan</div>
         <div class="nav-title-sub">UNS Medical Center</div>
@@ -376,7 +375,7 @@ foreach ($kunjungan_list as $k) {
           </button>
           <?php endif; ?>
           <?php if (!$is_done && $k['token']): ?>
-          <form action="proses/cekKunjungan.php" method="POST" style="display:inline;">
+          <form action="/proses/cekKunjungan.php" method="POST" style="display:inline;">
             <input type="hidden" name="jalur" value="token">
             <input type="hidden" name="token" value="<?php echo htmlspecialchars($k['token']); ?>">
             <button type="submit" class="btn-isi-survei">✍️ Isi Survei</button>

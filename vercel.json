@@ -5,6 +5,8 @@
     }
   },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/$1" }
+    { "source": "/proses/:path*", "destination": "/api/proses/:path*" },
+    { "source": "/admin/:path*",  "destination": "/api/admin/:path*" },
+    { "source": "/:path*",        "destination": "/api/:path*" }
   ]
 }

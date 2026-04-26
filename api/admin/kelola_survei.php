@@ -1,9 +1,8 @@
 <?php
-session_start();
-include '../../server/koneksi.php';
+require_once __DIR__ . "/../server/bootstrap.php";
 
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../login.php"); exit();
+    header("Location: /login.php"); exit();
 }
 
 $stmt = mysqli_prepare($koneksi,
@@ -103,7 +102,7 @@ $pct_puas = $total_resp > 0 ? round($puas / $total_resp * 100) : 0;
 <nav class="clay-nav sticky top-0 z-50 no-print">
   <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <a href="dashboard.php"
+      <a href="/admin/dashboard.php"
         class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition text-lg">←</a>
       <div>
         <p class="font-extrabold text-gray-800">Laporan Kepuasan Pasien</p>

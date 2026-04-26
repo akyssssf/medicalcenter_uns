@@ -1,6 +1,5 @@
 <?php
-session_start();
-include __DIR__ . '/server/koneksi.php';
+require_once __DIR__ . "/server/bootstrap.php";
 
 $is_logged_in = isset($_SESSION['nik']);
 
@@ -206,12 +205,12 @@ unset($_SESSION['flash']);
           <span class="text-xs font-bold text-gray-500 hidden sm:inline">
             👤 <?php echo htmlspecialchars($_SESSION['nama']); ?>
           </span>
-          <a href="dashboard.php"
+          <a href="/dashboard.php"
             class="clay-btn bg-gradient-to-r from-blue-600 to-blue-500 text-white px-4 py-2 text-xs">
             Dashboard →
           </a>
         <?php else: ?>
-          <a href="login.php"
+          <a href="/login.php"
             class="clay-btn bg-gradient-to-r from-blue-600 to-blue-500 text-white px-4 sm:px-5 py-2 text-xs sm:text-sm">
             Login Pasien
           </a>
@@ -253,16 +252,16 @@ unset($_SESSION['flash']);
           </div>
           <div class="mt-6 flex flex-wrap gap-3">
             <?php if ($is_logged_in): ?>
-              <button onclick="location.href='dashboard.php'"
+              <button onclick="location.href='/dashboard.php'"
                 class="clay-btn bg-white text-blue-800 px-6 py-3 text-sm">
                 Buka Dashboard Survei →
               </button>
             <?php else: ?>
-              <button onclick="location.href='login.php'"
+              <button onclick="location.href='/login.php'"
                 class="clay-btn bg-white text-blue-800 px-6 py-3 text-sm">
                 Login &amp; Isi Survei →
               </button>
-              <button onclick="location.href='login.php'"
+              <button onclick="location.href='/login.php'"
                 class="px-6 py-3 text-sm font-bold text-white border-2 border-white/30
                   rounded-2xl hover:bg-white/10 transition">
                 Daftar Akun
@@ -527,12 +526,12 @@ unset($_SESSION['flash']);
           Setiap penilaian yang Anda berikan menjadi bahan evaluasi nyata untuk meningkatkan mutu layanan klinik kami.
         </p>
         <?php if ($is_logged_in): ?>
-          <button onclick="location.href='dashboard.php'"
+          <button onclick="location.href='/dashboard.php'"
             class="clay-btn bg-white text-blue-800 px-8 py-3.5 text-sm">
             Isi Survei Sekarang →
           </button>
         <?php else: ?>
-          <button onclick="location.href='login.php'"
+          <button onclick="location.href='/login.php'"
             class="clay-btn bg-white text-blue-800 px-8 py-3.5 text-sm">
             Login &amp; Mulai Survei →
           </button>
