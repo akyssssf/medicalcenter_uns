@@ -4,9 +4,11 @@
       "runtime": "vercel-php@0.7.2"
     }
   },
-  "rewrites": [
-    { "source": "/proses/:path*", "destination": "/api/proses/:path*" },
-    { "source": "/admin/:path*",  "destination": "/api/admin/:path*" },
-    { "source": "/:path*",        "destination": "/api/:path*" }
-  ]
+  "routes": [
+  { "src": "/proses/(.+)", "dest": "/api/proses/$1" },
+  { "src": "/admin/(.+)",  "dest": "/api/admin/$1" },
+  { "src": "/(.*\\.php)",  "dest": "/api/$1" },
+  { "src": "/",            "dest": "/api/index.php" },
+  { "src": "/(.*)",        "dest": "/api/$1.php" }
+]
 }
