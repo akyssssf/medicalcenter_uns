@@ -1,5 +1,4 @@
 <?php
-
 $host = getenv('DB_HOST') ?: "localhost";
 $user = getenv('DB_USER') ?: "root";
 $pass = getenv('DB_PASS') ?: "";
@@ -17,4 +16,8 @@ if (!$koneksi || mysqli_connect_errno()) {
 }
 
 mysqli_set_charset($koneksi, 'utf8mb4');
-?>
+
+// ── DB Session Handler (untuk Vercel serverless) ──
+require_once __DIR__ . '/session_handler.php';
+$handler = new DBSessionHandler($koneksi);
+session_set_save_handler($handler, true);
