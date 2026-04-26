@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../server/koneksi.php';
+include '../../server/koneksi.php';
 
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php"); exit();

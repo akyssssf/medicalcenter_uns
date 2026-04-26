@@ -3,7 +3,7 @@ session_start();
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php"); exit();
 }
-include '../server/koneksi.php';
+include '../../server/koneksi.php';
 
 // Ambil statistik ringkas
 $total_users = 0; $total_survei = 0; $avg_global = '0.00';
