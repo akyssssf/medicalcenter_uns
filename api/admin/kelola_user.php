@@ -3,7 +3,7 @@ session_start();
 include '../../server/koneksi.php';
 
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../login.php"); exit();
+    header("Location: /login.php"); exit();
 }
 
 // ── Hapus User (via POST untuk keamanan CSRF-like) ──
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_id'])) {
     $_SESSION['flash'] = $ok
         ? ['type'=>'success','title'=>'Berhasil','message'=>'Data pasien berhasil dihapus.']
         : ['type'=>'error',  'title'=>'Gagal',   'message'=>'Gagal menghapus data pasien.'];
-    header("Location: kelola_user.php"); exit();
+    header("Location: /admin/kelola_user.php"); exit();
 }
 
 // ── Ambil Data Pasien ──

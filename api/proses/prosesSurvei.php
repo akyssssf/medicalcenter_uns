@@ -2,19 +2,19 @@
 session_start();
 include __DIR__ . '/../server/koneksi.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header("Location: ../survei.php"); exit(); }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header("Location: /survei.php"); exit(); }
 if (!isset($_SESSION['nik'])) { header("Location: ../login.php"); exit(); }
 
 // ── CSRF ──
 if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
     $_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
-    header("Location: ../survei.php"); exit();
+    header("Location: /survei.php"); exit();
 }
 unset($_SESSION['csrf_token']);
 
 $jalur = $_SESSION['jalur_survei'] ?? '';
 if (!in_array($jalur, ['kunjungan','umum'], true)) {
-    header("Location: ../dashboard.php"); exit();
+    header("Location: /dashboard.php"); exit();
 }
 
 // ── Ambil & Sanitasi Input ──
@@ -47,29 +47,29 @@ $frq_valid  = ['Pertama kali','2-3 kali','4-6 kali','Lebih dari 6 kali'];
 
 if (!in_array($kategori, $kat_valid, true)) {
     $_SESSION['flash'] = ['type'=>'error','title'=>'Data Tidak Valid','message'=>'Kategori pengunjung tidak valid.'];
-    header("Location: ../survei.php"); exit();
+    header("Location: /survei.php"); exit();
 }
 if (!in_array($poli, $poli_valid, true)) {
     $_SESSION['flash'] = ['type'=>'error','title'=>'Data Tidak Valid','message'=>'Poli tidak valid.'];
-    header("Location: ../survei.php"); exit();
+    header("Location: /survei.php"); exit();
 }
 if (!in_array($frekuensi, $frq_valid, true)) {
     $_SESSION['flash'] = ['type'=>'error','title'=>'Data Tidak Valid','message'=>'Frekuensi tidak valid.'];
-    header("Location: ../survei.php"); exit();
+    header("Location: /survei.php"); exit();
 }
 foreach ([$q1,$q2,$q3,$q4] as $q) {
     if ($q < 1 || $q > 5) {
         $_SESSION['flash'] = ['type'=>'error','title'=>'Data Tidak Valid','message'=>'Nilai rating harus antara 1–5.'];
-        header("Location: ../survei.php"); exit();
+        header("Location: /survei.php"); exit();
     }
 }
 if ($jalur === 'kunjungan' && ($q5 === null || $q5 < 1 || $q5 > 5)) {
     $_SESSION['flash'] = ['type'=>'error','title'=>'Data Tidak Valid','message'=>'Jawab pertanyaan spesifik poli.'];
-    header("Location: ../survei.php"); exit();
+    header("Location: /survei.php"); exit();
 }
 if ($nps_score < 0 || $nps_score > 10) {
     $_SESSION['flash'] = ['type'=>'error','title'=>'Data Tidak Valid','message'=>'Skor NPS harus antara 0–10.'];
-    header("Location: ../survei.php"); exit();
+    header("Location: /survei.php"); exit();
 }
 
 // ── Cek kolom exists (graceful fallback jika migrasi belum dijalankan) ──
@@ -114,12 +114,12 @@ if (mysqli_stmt_execute($stmt)) {
         'title'   => '🎉 Survei Terkirim!',
         'message' => 'Terima kasih atas penilaian Anda. Masukan Anda sangat berarti bagi peningkatan layanan kami.'
     ];
-    header("Location: ../index.php"); exit();
+    header("Location: /index.php"); exit();
 
 } else {
     mysqli_stmt_close($stmt);
     error_log("prosesSurvei error: " . mysqli_error($koneksi));
     $_SESSION['flash'] = ['type'=>'error','title'=>'Gagal Menyimpan','message'=>'Terjadi kesalahan. Silakan coba lagi.'];
-    header("Location: ../survei.php"); exit();
+    header("Location: /survei.php"); exit();
 }
 ?>

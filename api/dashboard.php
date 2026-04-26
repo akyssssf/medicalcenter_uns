@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['nik'])) { header("Location: login.php"); exit(); }
+if (!isset($_SESSION['nik'])) { header("Location: /login.php"); exit(); }
 
 $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);

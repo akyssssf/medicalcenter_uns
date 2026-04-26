@@ -3,7 +3,7 @@ session_start();
 include '../../server/koneksi.php';
 
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../login.php"); exit();
+    header("Location: /login.php"); exit();
 }
 
 // ── Tambah Admin ──
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tambah_admin'])) {
     } else {
         $_SESSION['flash'] = ['type'=>'error','title'=>'Validasi Gagal','message'=>implode('. ', $errors).'.'];
     }
-    header("Location: kelola_admin.php"); exit();
+    header("Location: /admin/kelola_admin.php"); exit();
 }
 
 // ── Hapus Admin (via POST) ──
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_id'])) {
         mysqli_stmt_close($del);
         $_SESSION['flash'] = ['type'=>'success','title'=>'Admin Dihapus','message'=>'Akses admin berhasil dicabut.'];
     }
-    header("Location: kelola_admin.php"); exit();
+    header("Location: /admin/kelola_admin.php"); exit();
 }
 
 $result_admin = mysqli_query($koneksi, "SELECT * FROM users WHERE role = 'admin' ORDER BY nama ASC");

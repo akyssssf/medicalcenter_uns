@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['nik'])) { header("Location: login.php"); exit(); }
+if (!isset($_SESSION['nik'])) { header("Location: /login.php"); exit(); }
 
 $jalur = $_SESSION['jalur_survei'] ?? null;
 if (!$jalur) { header("Location: dashboard.php"); exit(); }

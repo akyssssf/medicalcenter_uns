@@ -3,13 +3,13 @@ session_start();
 include __DIR__ . '/../server/koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../login.php"); exit();
+    header("Location: /login.php"); exit();
 }
 
 // ── CSRF ──
 if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
     $_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
-    header("Location: ../login.php"); exit();
+    header("Location: /login.php"); exit();
 }
 unset($_SESSION['csrf_token']);
 
@@ -20,7 +20,7 @@ if (isset($_SESSION['login_fail_time']) && ($now - $_SESSION['login_fail_time'])
 }
 if (($_SESSION['login_attempts'] ?? 0) >= 5) {
     $_SESSION['flash'] = ['type'=>'error','title'=>'Terlalu Banyak Percobaan','message'=>'Akun dikunci 15 menit karena terlalu banyak percobaan login.'];
-    header("Location: ../login.php"); exit();
+    header("Location: /login.php"); exit();
 }
 
 $identitas = trim($_POST['identitas'] ?? '');
@@ -28,7 +28,7 @@ $password  = $_POST['password'] ?? '';
 
 if (empty($identitas) || empty($password)) {
     $_SESSION['flash'] = ['type'=>'warning','title'=>'Input Tidak Lengkap','message'=>'NIK/No. HP dan password wajib diisi.'];
-    header("Location: ../login.php"); exit();
+    header("Location: /login.php"); exit();
 }
 
 // ── Query — ambil juga kolom kategori ──
@@ -58,9 +58,9 @@ if (mysqli_num_rows($result) === 1) {
         mysqli_stmt_close($stmt);
 
         if ($_SESSION['role'] === 'admin') {
-            header("Location: ../admin/dashboard.php");
+            header("Location: /admin/dashboard.php");
         } else {
-            header("Location: ../dashboard.php");
+            header("Location: /dashboard.php");
         }
         exit();
     }
@@ -74,5 +74,5 @@ $_SESSION['flash'] = [
     'type'=>'error','title'=>'Login Gagal',
     'message'=>"NIK/No. HP atau password salah. Sisa percobaan: $sisa kali."
 ];
-header("Location: ../login.php"); exit();
+header("Location: /login.php"); exit();
 ?>

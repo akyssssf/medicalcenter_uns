@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../login.php"); exit();
+    header("Location: /login.php"); exit();
 }
 include '../../server/koneksi.php';
 
