@@ -5,10 +5,9 @@ if (isset($_SESSION['email']) || isset($_SESSION['nik'])) {
     exit();
 }
 
-// Bikin Token CSRF
-//if (empty($_SESSION['csrf_token'])) {
-//    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
+// CSRF token generate
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
 
 // AMBIL PESAN ALERT (Supaya tidak nyasar ke Dashboard)
 $flash = $_SESSION['flash'] ?? null;
@@ -95,7 +94,7 @@ unset($_SESSION['flash']);
       <div class="form-wrap" id="form-wrap">
         
         <form id="form-login" action="/proses/prosesLogin.php" method="POST" class="form-slide in space-y-4">
-//        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
           <div>
             <label for="login-identitas">NIK / No. WhatsApp</label>
             <input name="identitas" id="login-identitas" type="text" placeholder="Masukkan NIK atau No. HP" class="clay-input" required/>
@@ -112,7 +111,7 @@ unset($_SESSION['flash']);
         </form>
 
         <form id="form-register" action="/proses/prosesRegister.php" method="POST" class="form-slide out-right space-y-4">
-//        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
           <div>
             <label for="reg-nik">NIK (Wajib 16 Digit)</label>
             <input name="nik" id="reg-nik" type="text" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, ''); validateNik(this)" placeholder="Contoh: 3519xxxxxxxxxxxx" class="clay-input" required/>
@@ -178,7 +177,7 @@ unset($_SESSION['flash']);
       <p class="text-gray-400 text-[11px] mb-5 text-center leading-relaxed">Verifikasi identitas Anda dengan memasukkan NIK dan No. WhatsApp yang terdaftar untuk mereset sandi.</p>
       
       <form action="/proses/prosesReset.php" method="POST" class="space-y-3">
-//      <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+      <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
         <div>
           <label class="text-xs font-bold text-gray-600 mb-1 block">NIK KTP (16 Digit)</label>
           <input name="nik" type="text" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="clay-input py-2.5 text-sm" placeholder="Masukkan 16 digit NIK..." required/>
