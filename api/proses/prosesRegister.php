@@ -5,11 +5,11 @@ include __DIR__ . '/../server/koneksi.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header("Location: /login.php"); exit(); }
 
 // ── CSRF ──
-//if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+////if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
     //$_SESSION['flash'] = ['type'=>'error','title'=>'Akses Ditolak','message'=>'Token keamanan tidak valid.'];
     //header("Location: /login.php"); exit();
 //}
-//unset($_SESSION['csrf_token']);
+////unset($_SESSION['csrf_token']);
 
 $nik      = preg_replace('/[^0-9]/', '', trim($_POST['nik']      ?? ''));
 $nama     = trim($_POST['nama']     ?? '');
