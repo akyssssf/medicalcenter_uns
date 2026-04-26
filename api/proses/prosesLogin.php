@@ -45,7 +45,7 @@ if (mysqli_num_rows($result) === 1) {
     $user = mysqli_fetch_assoc($result);
 
     if (password_verify($password, $user['password'])) {
-        session_regenerate_id(true);
+        // session_regenerate_id(true); // disabled for Vercel serverlesss
         $_SESSION['login_attempts'] = 0;
         unset($_SESSION['login_fail_time']);
 
