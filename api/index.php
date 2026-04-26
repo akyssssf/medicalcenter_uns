@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'server/koneksi.php';
+include __DIR__ . '/server/koneksi.php';
 
 $is_logged_in = isset($_SESSION['nik']);
 

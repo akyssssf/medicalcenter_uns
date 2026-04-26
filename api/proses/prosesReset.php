@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../server/koneksi.php';
+include __DIR__ . '/../server/koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../login.php"); exit();
