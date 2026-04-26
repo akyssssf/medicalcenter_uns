@@ -10,11 +10,11 @@ if (defined('_BOOTSTRAP_LOADED')) return;
 define('_BOOTSTRAP_LOADED', true);
 
 // ── Koneksi Database ──
-$host = getenv('DB_HOST') ?: "localhost";
-$user = getenv('DB_USER') ?: "root";
+$host = getenv('DB_HOST') ?: "gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com";
+$user = getenv('DB_USER') ?: "bTDgRaMyH41WXE8.root";
 $pass = getenv('DB_PASS') ?: "";
 $db   = getenv('DB_NAME') ?: "uns_medicalcenterDB";
-$port = (int)(getenv('DB_PORT') ?: 3306);
+$port = (int)(getenv('DB_PORT') ?: 4000);
 
 $koneksi = mysqli_init();
 mysqli_ssl_set($koneksi, NULL, NULL, NULL, NULL, NULL);
