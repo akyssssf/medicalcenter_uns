@@ -1,44 +1,35 @@
 <?php
 require_once __DIR__ . "/../server/bootstrap.php";
-
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
     header("Location: /login.php"); exit();
 }
 
-// ── Tambah Admin ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tambah_admin'])) {
-    $nik    = preg_replace('/[^0-9]/', '', trim($_POST['nik'] ?? ''));
-    $nama   = trim($_POST['nama'] ?? '');
-    $no_hp  = preg_replace('/[^0-9]/', '', trim($_POST['no_hp'] ?? ''));
-    $pw     = $_POST['password'] ?? '';
-
+    $nik   = preg_replace('/[^0-9]/', '', trim($_POST['nik'] ?? ''));
+    $nama  = trim($_POST['nama'] ?? '');
+    $no_hp = preg_replace('/[^0-9]/', '', trim($_POST['no_hp'] ?? ''));
+    $pw    = $_POST['password'] ?? '';
     $errors = [];
-    if (strlen($nik) !== 16)    $errors[] = 'NIK harus 16 digit';
-    if (strlen($nama) < 3)      $errors[] = 'Nama terlalu pendek';
-    if (strlen($no_hp) < 9)     $errors[] = 'No HP tidak valid';
+    if (strlen($nik) !== 16)   $errors[] = 'NIK harus 16 digit';
+    if (strlen($nama) < 3)     $errors[] = 'Nama terlalu pendek';
+    if (strlen($no_hp) < 9)    $errors[] = 'No HP tidak valid';
     if (strlen($pw) < 6 || !preg_match('/[0-9]/', $pw) || !preg_match('/[A-Z]/', $pw))
         $errors[] = 'Password tidak memenuhi syarat';
-
     if (empty($errors)) {
         $cek = mysqli_prepare($koneksi, "SELECT id FROM users WHERE nik = ?");
         mysqli_stmt_bind_param($cek, "s", $nik);
         mysqli_stmt_execute($cek);
         mysqli_stmt_store_result($cek);
-        if (mysqli_stmt_num_rows($cek) > 0) {
-            $errors[] = 'NIK sudah terdaftar';
-        }
+        if (mysqli_stmt_num_rows($cek) > 0) $errors[] = 'NIK sudah terdaftar';
         mysqli_stmt_close($cek);
     }
-
     if (empty($errors)) {
         $hash = password_hash($pw, PASSWORD_BCRYPT, ['cost'=>12]);
         $ins  = mysqli_prepare($koneksi, "INSERT INTO users (nik, nama, no_hp, password, role) VALUES (?, ?, ?, ?, 'admin')");
         mysqli_stmt_bind_param($ins, "ssss", $nik, $nama, $no_hp, $hash);
-        if (mysqli_stmt_execute($ins)) {
-            $_SESSION['flash'] = ['type'=>'success','title'=>'Admin Ditambahkan','message'=>"Akun admin $nama berhasil dibuat."];
-        } else {
-            $_SESSION['flash'] = ['type'=>'error','title'=>'Gagal','message'=>'Terjadi kesalahan sistem.'];
-        }
+        $_SESSION['flash'] = mysqli_stmt_execute($ins)
+            ? ['type'=>'success','title'=>'Admin Ditambahkan','message'=>"Akun admin $nama berhasil dibuat."]
+            : ['type'=>'error','title'=>'Gagal','message'=>'Terjadi kesalahan sistem.'];
         mysqli_stmt_close($ins);
     } else {
         $_SESSION['flash'] = ['type'=>'error','title'=>'Validasi Gagal','message'=>implode('. ', $errors).'.'];
@@ -46,20 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tambah_admin'])) {
     header("Location: /admin/kelola_admin.php"); exit();
 }
 
-// ── Hapus Admin (via POST) ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_id'])) {
     $id_hapus = (int)$_POST['hapus_id'];
-
-    // Tidak boleh hapus diri sendiri
     $self = mysqli_prepare($koneksi, "SELECT nik FROM users WHERE id = ?");
     mysqli_stmt_bind_param($self, "i", $id_hapus);
     mysqli_stmt_execute($self);
-    $res_self = mysqli_stmt_get_result($self);
-    $data_self = mysqli_fetch_assoc($res_self);
+    $data_self = mysqli_fetch_assoc(mysqli_stmt_get_result($self));
     mysqli_stmt_close($self);
-
     if ($data_self && $data_self['nik'] === $_SESSION['nik']) {
-        $_SESSION['flash'] = ['type'=>'error','title'=>'Tidak Diizinkan','message'=>'Anda tidak bisa menghapus akun Anda sendiri!'];
+        $_SESSION['flash'] = ['type'=>'error','title'=>'Tidak Diizinkan','message'=>'Anda tidak bisa menghapus akun sendiri!'];
     } else {
         $del = mysqli_prepare($koneksi, "DELETE FROM users WHERE id = ? AND role = 'admin'");
         mysqli_stmt_bind_param($del, "i", $id_hapus);
@@ -71,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_id'])) {
 }
 
 $result_admin = mysqli_query($koneksi, "SELECT * FROM users WHERE role = 'admin' ORDER BY nama ASC");
-
 $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);
 ?>
@@ -87,94 +72,131 @@ unset($_SESSION['flash']);
   <style>
     *{font-family:'Plus Jakarta Sans',sans-serif;box-sizing:border-box;}
     body{background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 100%);min-height:100vh;}
-    .clay-nav{background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #e2e8f0;box-shadow:0 2px 10px rgba(0,0,0,.04);}
-    .admin-card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.06);border:1px solid #f1f5f9;padding:1.5rem;}
-    .clay-input{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:0.7rem 1rem;
-      width:100%;outline:none;font-size:.9rem;transition:border-color .2s;}
+
+    .clay-nav{background:rgba(255,255,255,.97);backdrop-filter:blur(16px);
+      border-bottom:1px solid #e2e8f0;box-shadow:0 2px 10px rgba(0,0,0,.04);
+      position:sticky;top:0;z-index:50;}
+    .nav-inner{max-width:960px;margin:0 auto;padding:0 20px;height:58px;
+      display:flex;align-items:center;gap:12px;}
+    .back-btn{width:36px;height:36px;background:#f1f5f9;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;text-decoration:none;
+      font-size:1rem;flex-shrink:0;transition:background .2s;}
+    .back-btn:hover{background:#e2e8f0;}
+
+    .admin-card{background:#fff;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,.06);
+      border:1px solid #f1f5f9;padding:1.5rem;}
+    .clay-input{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;
+      padding:0.65rem 1rem;width:100%;outline:none;font-size:.88rem;transition:border-color .2s;}
     .clay-input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1);}
+    .clay-label{font-size:.75rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;}
     .btn-primary{background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;font-weight:700;
-      padding:0.75rem 1.5rem;border-radius:12px;transition:.2s;cursor:pointer;border:none;width:100%;}
-    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(37,99,235,.3);}
-  
-    @media (max-width: 768px) {
-      .container, main { padding-left: 12px !important; padding-right: 12px !important; }
-      table { font-size: .78rem; }
-      th, td { padding: 8px 10px !important; }
-      .card { border-radius: 16px !important; }
+      padding:0.7rem 1.25rem;border-radius:12px;cursor:pointer;border:none;width:100%;
+      font-size:.88rem;transition:.2s;}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.3);}
+
+    /* Admin list item */
+    .admin-item{display:flex;align-items:center;justify-content:space-between;
+      padding:12px 0;border-bottom:1px solid #f1f5f9;}
+    .admin-item:last-child{border-bottom:none;padding-bottom:0;}
+    .admin-avatar{width:42px;height:42px;border-radius:12px;background:#f5f3ff;
+      display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+
+    /* Grid layout */
+    .main-grid{display:grid;grid-template-columns:1fr 2fr;gap:20px;}
+
+    /* ── TABLET (≤768px) ── */
+    @media(max-width:768px){
+      .nav-inner{padding:0 14px;height:52px;}
+      .main-grid{grid-template-columns:1fr;gap:14px;}
+      .admin-card{padding:1.1rem;border-radius:16px;}
     }
-    @media (max-width: 480px) {
-      th:nth-child(n+4), td:nth-child(n+4) { display: none; }
-      .btn-action { padding: 5px 8px !important; font-size: .7rem !important; }
+
+    /* ── MOBILE (≤480px) ── */
+    @media(max-width:480px){
+      .nav-inner{padding:0 10px;height:48px;}
+      .back-btn{width:32px;height:32px;}
+      .admin-card{padding:.9rem;border-radius:14px;}
+      .clay-input{padding:.55rem .85rem;font-size:.82rem;}
+      .admin-avatar{width:36px;height:36px;border-radius:10px;font-size:1rem;}
+      .admin-item{padding:10px 0;gap:8px;}
     }
   </style>
 </head>
 <body>
-  <nav class="clay-nav sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center gap-3">
-      <a href="/admin/dashboard.php" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition text-base">←</a>
+  <nav class="clay-nav">
+    <div class="nav-inner">
+      <a href="/admin/dashboard.php" class="back-btn">←</a>
       <div>
-        <p class="font-extrabold text-gray-800">Manajemen Admin</p>
-        <p class="text-xs text-gray-400">Tambah atau cabut akses administrator</p>
+        <p style="font-weight:800;font-size:.92rem;color:#1e293b;line-height:1.2;">Manajemen Admin</p>
+        <p style="font-size:.7rem;color:#94a3b8;">Tambah atau cabut akses administrator</p>
       </div>
     </div>
   </nav>
 
-  <main class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <main style="max-width:960px;margin:0 auto;padding:20px 20px 60px;">
+    <div class="main-grid">
 
-    <!-- FORM TAMBAH ADMIN -->
-    <div class="lg:col-span-1">
-      <div class="admin-card">
-        <h2 class="font-bold text-gray-800 mb-4">➕ Tambah Admin Baru</h2>
-        <form action="" method="POST" class="space-y-3">
+      <!-- FORM TAMBAH -->
+      <div class="admin-card" style="height:fit-content;">
+        <h2 style="font-weight:800;font-size:.92rem;color:#1e293b;margin-bottom:16px;">➕ Tambah Admin Baru</h2>
+        <form action="" method="POST" style="display:flex;flex-direction:column;gap:12px;">
           <div>
-            <label class="text-xs font-bold text-gray-600 block mb-1">NIK (16 Digit)</label>
+            <label class="clay-label">NIK (16 Digit)</label>
             <input type="text" name="nik" maxlength="16" inputmode="numeric"
               oninput="this.value=this.value.replace(/[^0-9]/g,'')"
               class="clay-input" placeholder="Masukkan NIK" required/>
           </div>
           <div>
-            <label class="text-xs font-bold text-gray-600 block mb-1">Nama Lengkap</label>
+            <label class="clay-label">Nama Lengkap</label>
             <input type="text" name="nama" class="clay-input" placeholder="Nama Admin" required/>
           </div>
           <div>
-            <label class="text-xs font-bold text-gray-600 block mb-1">No. WhatsApp</label>
+            <label class="clay-label">No. WhatsApp</label>
             <input type="text" name="no_hp" inputmode="numeric"
               oninput="this.value=this.value.replace(/[^0-9]/g,'')"
               class="clay-input" placeholder="08xxx" required/>
           </div>
           <div>
-            <label class="text-xs font-bold text-gray-600 block mb-1">Password</label>
-            <input type="password" name="password" class="clay-input" placeholder="Min 6 kar (angka + huruf besar)" required autocomplete="new-password"/>
+            <label class="clay-label">Password</label>
+            <input type="password" name="password" class="clay-input"
+              placeholder="Min 6 kar (angka + huruf besar)" required autocomplete="new-password"/>
           </div>
-          <div class="pt-1">
-            <button type="submit" name="tambah_admin" class="btn-primary">💾 Simpan Akun Admin</button>
-          </div>
+          <button type="submit" name="tambah_admin" class="btn-primary" style="margin-top:4px;">
+            💾 Simpan Akun Admin
+          </button>
         </form>
       </div>
-    </div>
 
-    <!-- LIST ADMIN -->
-    <div class="lg:col-span-2">
+      <!-- DAFTAR ADMIN -->
       <div class="admin-card">
-        <h2 class="font-bold text-gray-800 mb-4">🛡️ Daftar Admin Aktif</h2>
-        <div class="divide-y divide-gray-100">
+        <h2 style="font-weight:800;font-size:.92rem;color:#1e293b;margin-bottom:14px;">🛡️ Daftar Admin Aktif</h2>
+        <div>
           <?php while ($row = mysqli_fetch_assoc($result_admin)):
             $isSelf = $row['nik'] === $_SESSION['nik']; ?>
-          <div class="flex items-center justify-between py-3.5">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-lg flex-shrink-0">
-                <?php echo $isSelf ? '👑' : '🛡️'; ?>
-              </div>
-              <div>
-                <p class="font-bold text-gray-800 text-sm"><?php echo htmlspecialchars($row['nama']); ?></p>
-                <p class="text-xs text-gray-400 font-mono"><?php echo htmlspecialchars($row['nik']); ?></p>
+          <div class="admin-item">
+            <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+              <div class="admin-avatar"><?php echo $isSelf ? '👑' : '🛡️'; ?></div>
+              <div style="min-width:0;">
+                <p style="font-weight:700;font-size:.88rem;color:#1e293b;
+                  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  <?php echo htmlspecialchars($row['nama']); ?>
+                </p>
+                <p style="font-size:.68rem;color:#94a3b8;font-family:monospace;
+                  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  <?php echo htmlspecialchars($row['nik']); ?>
+                </p>
               </div>
             </div>
             <?php if ($isSelf): ?>
-              <span class="text-blue-500 text-xs font-bold bg-blue-50 px-3 py-1.5 rounded-full">Akun Anda</span>
+              <span style="font-size:.72rem;font-weight:700;color:#2563eb;background:#eff6ff;
+                padding:5px 12px;border-radius:999px;flex-shrink:0;">Akun Anda</span>
             <?php else: ?>
               <button onclick="hapusAdmin(<?php echo $row['id']; ?>, '<?php echo htmlspecialchars(addslashes($row['nama'])); ?>')"
-                class="text-red-500 text-xs font-bold hover:bg-red-50 px-3 py-2 rounded-lg transition">
+                style="font-size:.72rem;font-weight:700;color:#ef4444;background:transparent;
+                border:none;cursor:pointer;padding:5px 10px;border-radius:8px;
+                transition:background .2s;flex-shrink:0;"
+                onmouseover="this.style.background='#fef2f2'"
+                onmouseout="this.style.background='transparent'">
                 Hapus Akses
               </button>
             <?php endif; ?>
@@ -182,6 +204,7 @@ unset($_SESSION['flash']);
           <?php endwhile; ?>
         </div>
       </div>
+
     </div>
   </main>
 

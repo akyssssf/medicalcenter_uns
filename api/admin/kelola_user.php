@@ -1,11 +1,9 @@
 <?php
 require_once __DIR__ . "/../server/bootstrap.php";
-
 if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
     header("Location: /login.php"); exit();
 }
 
-// ── Hapus User (via POST untuk keamanan CSRF-like) ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_id'])) {
     $id_hapus = (int)$_POST['hapus_id'];
     $stmt_hapus = mysqli_prepare($koneksi, "DELETE FROM users WHERE id = ? AND role = 'user'");
@@ -18,11 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_id'])) {
     header("Location: /admin/kelola_user.php"); exit();
 }
 
-// ── Ambil Data Pasien ──
 $result_users = mysqli_query($koneksi, "SELECT * FROM users WHERE role = 'user' ORDER BY id DESC");
 $total = mysqli_num_rows($result_users);
-
-// Flash message
 $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);
 ?>
@@ -38,60 +33,107 @@ unset($_SESSION['flash']);
   <style>
     *{font-family:'Plus Jakarta Sans',sans-serif;box-sizing:border-box;}
     body{background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 100%);min-height:100vh;}
-    .clay-nav{background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #e2e8f0;box-shadow:0 2px 10px rgba(0,0,0,.04);}
-    .admin-card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.06);border:1px solid #f1f5f9;padding:1.5rem;}
-    .styled-table{width:100%;border-collapse:collapse;}
+
+    /* Nav */
+    .clay-nav{background:rgba(255,255,255,.97);backdrop-filter:blur(16px);
+      border-bottom:1px solid #e2e8f0;box-shadow:0 2px 10px rgba(0,0,0,.04);
+      position:sticky;top:0;z-index:50;}
+    .nav-inner{max-width:960px;margin:0 auto;padding:0 20px;height:58px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .back-btn{width:36px;height:36px;background:#f1f5f9;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;text-decoration:none;
+      font-size:1rem;flex-shrink:0;transition:background .2s;}
+    .back-btn:hover{background:#e2e8f0;}
+
+    /* Card */
+    .admin-card{background:#fff;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,.06);
+      border:1px solid #f1f5f9;padding:1.25rem;}
+
+    /* Table */
+    .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+    .styled-table{width:100%;border-collapse:collapse;min-width:560px;}
     .styled-table thead tr{background:#f8fafc;}
-    .styled-table th{padding:12px 16px;border-bottom:2px solid #e2e8f0;font-size:.8rem;font-weight:700;color:#475569;text-align:left;white-space:nowrap;}
-    .styled-table td{padding:12px 16px;border-bottom:1px solid #f1f5f9;font-size:.875rem;vertical-align:middle;}
+    .styled-table th{padding:11px 14px;border-bottom:2px solid #e2e8f0;font-size:.78rem;
+      font-weight:700;color:#475569;text-align:left;white-space:nowrap;}
+    .styled-table td{padding:11px 14px;border-bottom:1px solid #f1f5f9;
+      font-size:.84rem;vertical-align:middle;}
     .styled-table tbody tr:hover{background:#f8fafc;}
-    .btn-del{background:#fef2f2;color:#ef4444;border:1.5px solid #fecaca;padding:6px 14px;border-radius:10px;
-      font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s;border:none;}
+    .btn-del{background:#fef2f2;color:#ef4444;border:1.5px solid #fecaca;
+      padding:6px 14px;border-radius:10px;font-size:.75rem;font-weight:700;
+      cursor:pointer;transition:.2s;border:none;}
     .btn-del:hover{background:#ef4444;color:white;}
-  
-    @media (max-width: 768px) {
-      .container, main { padding-left: 12px !important; padding-right: 12px !important; }
-      table { font-size: .78rem; }
-      th, td { padding: 8px 10px !important; }
-      .card { border-radius: 16px !important; }
+
+    /* Search + badge */
+    .search-input{border:1.5px solid #e2e8f0;border-radius:12px;padding:8px 14px;
+      font-size:.85rem;outline:none;transition:border-color .2s;width:100%;}
+    .search-input:focus{border-color:#3b82f6;}
+
+    /* ── TABLET (≤768px) ── */
+    @media(max-width:768px){
+      .nav-inner{padding:0 14px;height:52px;}
+      .nav-title{font-size:.88rem;}
+      .nav-sub{font-size:.68rem;}
+      .admin-card{padding:1rem;border-radius:16px;}
+      .header-row{flex-direction:column;align-items:flex-start;gap:10px;}
+      .header-right{width:100%;}
+      .count-badge{display:none;}
+      .styled-table th{padding:9px 10px;font-size:.73rem;}
+      .styled-table td{padding:9px 10px;font-size:.8rem;}
     }
-    @media (max-width: 480px) {
-      th:nth-child(n+4), td:nth-child(n+4) { display: none; }
-      .btn-action { padding: 5px 8px !important; font-size: .7rem !important; }
+
+    /* ── MOBILE (≤480px) ── */
+    @media(max-width:480px){
+      .nav-inner{padding:0 10px;height:48px;}
+      .back-btn{width:32px;height:32px;font-size:.9rem;}
+      .admin-card{padding:.85rem;border-radius:14px;}
+      /* Sembunyikan kolom No & No WA di mobile */
+      .styled-table th:nth-child(1),
+      .styled-table td:nth-child(1),
+      .styled-table th:nth-child(4),
+      .styled-table td:nth-child(4){display:none;}
+      .styled-table th{padding:8px 8px;font-size:.7rem;}
+      .styled-table td{padding:8px 8px;font-size:.76rem;}
+      .btn-del{padding:5px 10px;font-size:.7rem;}
+      .nik-cell{font-size:.65rem !important;letter-spacing:0 !important;}
     }
   </style>
 </head>
 <body>
-  <nav class="clay-nav sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="/admin/dashboard.php" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition text-base" title="Kembali">←</a>
+  <nav class="clay-nav">
+    <div class="nav-inner">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a href="/admin/dashboard.php" class="back-btn">←</a>
         <div>
-          <p class="font-extrabold text-gray-800">Kelola Data Pasien</p>
-          <p class="text-xs text-gray-400">Total <?php echo $total; ?> pasien terdaftar</p>
+          <p class="nav-title" style="font-weight:800;color:#1e293b;line-height:1.2;">Kelola Data Pasien</p>
+          <p class="nav-sub" style="font-size:.72rem;color:#94a3b8;">Total <?php echo $total; ?> pasien terdaftar</p>
         </div>
       </div>
-      <span class="text-sm font-bold text-blue-600">Admin <?php echo htmlspecialchars($_SESSION['nama']); ?></span>
+      <span style="font-size:.82rem;font-weight:700;color:#2563eb;">
+        Admin <?php echo htmlspecialchars(explode(' ',$_SESSION['nama'])[0]); ?>
+      </span>
     </div>
   </nav>
 
-  <main class="max-w-6xl mx-auto px-4 py-8">
+  <main style="max-width:960px;margin:0 auto;padding:20px 20px 60px;">
     <div class="admin-card">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+
+      <!-- Header -->
+      <div class="header-row" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
         <div>
-          <h2 class="font-bold text-gray-800">Daftar Pasien Terdaftar</h2>
-          <p class="text-xs text-gray-400">Role: user · Diurutkan terbaru</p>
+          <h2 style="font-weight:800;font-size:.95rem;color:#1e293b;">Daftar Pasien Terdaftar</h2>
+          <p style="font-size:.72rem;color:#94a3b8;margin-top:2px;">Role: user · Diurutkan terbaru</p>
         </div>
-        <div class="flex gap-2 w-full sm:w-auto">
-          <input type="text" id="search-input" placeholder="🔍 Cari nama / NIK..."
-            class="border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-blue-400 flex-1 sm:w-52"/>
-          <span class="text-sm font-bold text-blue-600 bg-blue-50 border border-blue-100 px-4 py-2 rounded-xl whitespace-nowrap">
+        <div class="header-right" style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="search-input" placeholder="🔍 Cari nama / NIK..." class="search-input" style="max-width:220px;"/>
+          <span class="count-badge" style="font-size:.78rem;font-weight:700;color:#2563eb;background:#eff6ff;
+            border:1px solid #bfdbfe;padding:7px 14px;border-radius:10px;white-space:nowrap;flex-shrink:0;">
             <?php echo $total; ?> Pasien
           </span>
         </div>
       </div>
 
-      <div class="overflow-x-auto">
+      <!-- Table -->
+      <div class="tbl-wrap">
         <table class="styled-table" id="user-table">
           <thead>
             <tr>
@@ -99,26 +141,29 @@ unset($_SESSION['flash']);
               <th>NIK</th>
               <th>Nama Lengkap</th>
               <th>No. WhatsApp</th>
-              <th class="text-center">Aksi</th>
+              <th style="text-align:center;">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <?php
-            $no = 1;
+            <?php $no = 1;
             if ($total > 0) {
                 while ($row = mysqli_fetch_assoc($result_users)) { ?>
             <tr>
-              <td class="text-gray-400 font-medium"><?php echo $no++; ?></td>
-              <td class="font-mono text-gray-700 tracking-wider text-xs"><?php echo htmlspecialchars($row['nik']); ?></td>
-              <td class="font-semibold text-gray-800"><?php echo htmlspecialchars($row['nama']); ?></td>
-              <td class="text-gray-600"><?php echo htmlspecialchars($row['no_hp']); ?></td>
-              <td class="text-center">
+              <td style="color:#94a3b8;font-weight:600;"><?php echo $no++; ?></td>
+              <td class="nik-cell" style="font-family:monospace;color:#475569;font-size:.78rem;letter-spacing:.05em;">
+                <?php echo htmlspecialchars($row['nik']); ?>
+              </td>
+              <td style="font-weight:700;color:#1e293b;"><?php echo htmlspecialchars($row['nama']); ?></td>
+              <td style="color:#64748b;"><?php echo htmlspecialchars($row['no_hp']); ?></td>
+              <td style="text-align:center;">
                 <button onclick="hapusUser(<?php echo $row['id']; ?>, '<?php echo htmlspecialchars(addslashes($row['nama'])); ?>')"
                   class="btn-del">🗑️ Hapus</button>
               </td>
             </tr>
             <?php }} else { ?>
-            <tr><td colspan="5" class="text-center py-10 text-gray-400 italic">Belum ada pasien terdaftar.</td></tr>
+            <tr><td colspan="5" style="text-align:center;padding:40px;color:#94a3b8;font-style:italic;">
+              Belum ada pasien terdaftar.
+            </td></tr>
             <?php } ?>
           </tbody>
         </table>
@@ -126,7 +171,6 @@ unset($_SESSION['flash']);
     </div>
   </main>
 
-  <!-- Hidden form untuk POST delete -->
   <form id="form-hapus" method="POST" action="/admin/kelola_user.php" style="display:none;">
     <input type="hidden" name="hapus_id" id="hapus-id-input">
   </form>
@@ -145,7 +189,7 @@ unset($_SESSION['flash']);
     function hapusUser(id, nama) {
       Swal.fire({
         title: 'Hapus Pasien?',
-        html: `Yakin ingin menghapus data <strong>${nama}</strong>?<br><small class="text-gray-400">Tindakan ini tidak bisa dibatalkan.</small>`,
+        html: `Yakin ingin menghapus data <strong>${nama}</strong>?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: '🗑️ Ya, Hapus',

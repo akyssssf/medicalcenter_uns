@@ -56,21 +56,34 @@ $pct_puas = $total_resp > 0 ? round($puas / $total_resp * 100) : 0;
   <style>
     *{font-family:'Plus Jakarta Sans',sans-serif;box-sizing:border-box;}
     body{background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 100%);min-height:100vh;}
-    .clay-nav{background:rgba(255,255,255,.95);backdrop-filter:blur(16px);
-      border-bottom:1px solid #e2e8f0;box-shadow:0 2px 12px rgba(0,0,0,.04);}
+
+    /* Nav */
+    .clay-nav{background:rgba(255,255,255,.97);backdrop-filter:blur(16px);
+      border-bottom:1px solid #e2e8f0;box-shadow:0 2px 12px rgba(0,0,0,.04);
+      position:sticky;top:0;z-index:50;}
+    .nav-inner{max-width:1100px;margin:0 auto;padding:0 20px;height:58px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .back-btn{width:36px;height:36px;background:#f1f5f9;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;text-decoration:none;
+      font-size:1rem;flex-shrink:0;transition:background .2s;}
+    .back-btn:hover{background:#e2e8f0;}
+    .nav-btns{display:flex;gap:8px;}
+
+    /* Cards */
     .card{background:#fff;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,.06);
-      border:1px solid #f1f5f9;padding:1.5rem;}
-    .stat-box{background:#fff;border-radius:18px;border:1px solid #e2e8f0;
-      padding:1.25rem 1.5rem;box-shadow:0 4px 14px rgba(0,0,0,.04);transition:transform .2s;}
+      border:1px solid #f1f5f9;padding:1.4rem;}
+    .stat-box{background:#fff;border-radius:16px;border:1px solid #e2e8f0;
+      padding:1rem 1.25rem;box-shadow:0 4px 14px rgba(0,0,0,.04);
+      display:flex;align-items:center;gap:12px;transition:transform .2s;}
     .stat-box:hover{transform:translateY(-2px);}
+    .stat-icon{width:44px;height:44px;border-radius:14px;display:flex;
+      align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
 
     /* Progress bars */
     .prog-track{background:#f1f5f9;border-radius:999px;overflow:hidden;height:10px;width:100%;}
-    .prog-fill{height:100%;border-radius:999px;width:0%;
-      transition:width 1.3s cubic-bezier(.4,0,.2,1);}
+    .prog-fill{height:100%;border-radius:999px;width:0%;transition:width 1.3s cubic-bezier(.4,0,.2,1);}
     .kat-track{background:#f1f5f9;border-radius:999px;overflow:hidden;height:8px;flex:1;}
-    .kat-fill{height:100%;border-radius:999px;width:0%;
-      transition:width 1.3s cubic-bezier(.4,0,.2,1);}
+    .kat-fill{height:100%;border-radius:999px;width:0%;transition:width 1.3s cubic-bezier(.4,0,.2,1);}
 
     /* Gauge */
     .gauge-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;}
@@ -86,74 +99,104 @@ $pct_puas = $total_resp > 0 ? round($puas / $total_resp * 100) : 0;
       display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;}
     .q5{background:#dcfce7;color:#166534;} .q4{background:#dbeafe;color:#1d4ed8;}
     .q3{background:#fef9c3;color:#854d0e;} .q12{background:#fee2e2;color:#991b1b;}
-    .styled-table{width:100%;border-collapse:collapse;min-width:820px;}
+    .styled-table{width:100%;border-collapse:collapse;min-width:700px;}
     .styled-table thead tr{background:#f8fafc;}
     .styled-table th{padding:11px 14px;border-bottom:2px solid #e2e8f0;font-size:.78rem;
       font-weight:700;color:#475569;text-align:left;white-space:nowrap;}
     .styled-table td{padding:11px 14px;border-bottom:1px solid #f1f5f9;
       font-size:.84rem;vertical-align:middle;}
     .styled-table tbody tr:hover{background:#f8fafc;}
+    .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+
+    /* Charts grid */
+    .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+
     @media print{.no-print{display:none!important;}}
-  
-    @media (max-width: 768px) {
-      .container, main { padding-left: 12px !important; padding-right: 12px !important; }
-      table { font-size: .78rem; }
-      th, td { padding: 8px 10px !important; }
-      .card { border-radius: 16px !important; }
+
+    /* ── TABLET (≤900px) ── */
+    @media(max-width:900px){
+      .charts-grid{grid-template-columns:1fr;}
+      .stats-grid{grid-template-columns:repeat(2,1fr);}
+      .nav-inner{padding:0 14px;}
+      .card{padding:1.1rem;border-radius:16px;}
     }
-    @media (max-width: 480px) {
-      th:nth-child(n+4), td:nth-child(n+4) { display: none; }
-      .btn-action { padding: 5px 8px !important; font-size: .7rem !important; }
+
+    /* ── MOBILE (≤600px) ── */
+    @media(max-width:600px){
+      .nav-inner{height:50px;padding:0 10px;}
+      .back-btn{width:32px;height:32px;}
+      .nav-title{font-size:.85rem;}
+      .nav-sub{font-size:.67rem;}
+      .nav-btn-text{display:none;}
+      .nav-btns{gap:6px;}
+      .nav-btn-icon{font-size:1rem;}
+      .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+      .stat-box{padding:.8rem;gap:8px;}
+      .stat-icon{width:36px;height:36px;font-size:1.1rem;border-radius:10px;}
+      .stat-box h3{font-size:1.3rem;}
+      .card{padding:.9rem;border-radius:14px;}
+      .gauge-wrap svg{width:90px;height:90px;}
+      main{padding:12px 10px 40px;}
+    }
+
+    /* ── VERY SMALL (≤400px) ── */
+    @media(max-width:400px){
+      .stats-grid{grid-template-columns:1fr 1fr;gap:6px;}
+      .stat-box{padding:.7rem;gap:7px;}
     }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav class="clay-nav sticky top-0 z-50 no-print">
-  <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <a href="/admin/dashboard.php"
-        class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition text-lg">←</a>
+<nav class="clay-nav no-print">
+  <div class="nav-inner">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a href="/admin/dashboard.php" class="back-btn">←</a>
       <div>
-        <p class="font-extrabold text-gray-800">Laporan Kepuasan Pasien</p>
-        <p class="text-xs text-gray-400">Data Aktual · <?php echo $total_resp; ?> Responden</p>
+        <p class="nav-title" style="font-weight:800;color:#1e293b;line-height:1.2;">Laporan Kepuasan Pasien</p>
+        <p class="nav-sub" style="font-size:.72rem;color:#94a3b8;">Data Aktual · <?php echo $total_resp; ?> Responden</p>
       </div>
     </div>
-    <div class="flex gap-2">
+    <div class="nav-btns">
       <button onclick="exportCSV()"
-        class="text-xs font-bold text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 px-4 py-2 rounded-xl transition">
-        📥 Export CSV
+        style="font-size:.78rem;font-weight:700;color:#15803d;background:#f0fdf4;
+        border:1px solid #bbf7d0;padding:7px 14px;border-radius:10px;cursor:pointer;
+        display:flex;align-items:center;gap:5px;">
+        <span class="nav-btn-icon">📥</span><span class="nav-btn-text">Export CSV</span>
       </button>
       <button onclick="window.print()"
-        class="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl transition">
-        🖨️ Cetak
+        style="font-size:.78rem;font-weight:700;color:#fff;background:#2563eb;
+        border:none;padding:7px 14px;border-radius:10px;cursor:pointer;
+        display:flex;align-items:center;gap:5px;">
+        <span class="nav-btn-icon">🖨️</span><span class="nav-btn-text">Cetak</span>
       </button>
     </div>
   </div>
 </nav>
 
-<main class="max-w-7xl mx-auto px-4 py-6 space-y-5">
+<main style="max-width:1100px;margin:0 auto;padding:20px 20px 60px;" class="space-y-4">
 
   <!-- STAT BOXES -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="stats-grid">
     <div class="stat-box flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl flex-shrink-0">👥</div>
+      <div class="stat-icon" style="background:#eff6ff;">👥</div>
       <div><p class="text-xs text-gray-400 font-bold">Total Responden</p>
         <h3 class="text-2xl font-extrabold text-gray-800"><?php echo $total_resp; ?></h3></div>
     </div>
     <div class="stat-box flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-yellow-100 flex items-center justify-center text-2xl flex-shrink-0">⭐</div>
+      <div class="stat-icon" style="background:#fefce8;">⭐</div>
       <div><p class="text-xs text-gray-400 font-bold">Indeks Kepuasan</p>
         <h3 class="text-2xl font-extrabold text-gray-800"><?php echo $avg_global; ?><span class="text-xs text-gray-400">/5</span></h3></div>
     </div>
     <div class="stat-box flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center text-2xl flex-shrink-0">😊</div>
+      <div class="stat-icon" style="background:#f0fdf4;">😊</div>
       <div><p class="text-xs text-gray-400 font-bold">Keramahan (Q1)</p>
         <h3 class="text-2xl font-extrabold text-gray-800"><?php echo $avg_q[0]; ?></h3></div>
     </div>
     <div class="stat-box flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl flex-shrink-0">🩺</div>
+      <div class="stat-icon" style="background:#faf5ff;">🩺</div>
       <div><p class="text-xs text-gray-400 font-bold">Kualitas Medis (Q4)</p>
         <h3 class="text-2xl font-extrabold text-gray-800"><?php echo $avg_q[3]; ?></h3></div>
     </div>
@@ -162,7 +205,7 @@ $pct_puas = $total_resp > 0 ? round($puas / $total_resp * 100) : 0;
   <?php if ($total_resp > 0): ?>
 
   <!-- CHARTS ROW -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+  <div class="charts-grid">
 
     <!-- KIRI: Bar + Line Chart -->
     <div class="space-y-5">
@@ -315,7 +358,7 @@ $pct_puas = $total_resp > 0 ? round($puas / $total_resp * 100) : 0;
       <input type="text" id="search-input" placeholder="🔍 Cari nama / NIK..."
         class="border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-blue-400 w-full sm:w-52 no-print"/>
     </div>
-    <div class="overflow-x-auto">
+    <div class="tbl-wrap">
       <table class="styled-table" id="survey-table">
         <thead>
           <tr>

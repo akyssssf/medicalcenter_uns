@@ -4,7 +4,6 @@ if (!isset($_SESSION['nik']) || $_SESSION['role'] !== 'admin') {
     header("Location: /login.php"); exit();
 }
 
-// Ambil statistik ringkas
 $total_users = 0; $total_survei = 0; $avg_global = '0.00';
 
 $r = mysqli_query($koneksi, "SELECT COUNT(*) AS cnt FROM users WHERE role='user'");
@@ -25,118 +24,176 @@ if ($r2) { $row2 = mysqli_fetch_assoc($r2); $total_survei = $row2['cnt']; $avg_g
   <style>
     *{font-family:'Plus Jakarta Sans',sans-serif;box-sizing:border-box;}
     body{background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 100%);min-height:100vh;}
-    .clay-nav{background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #e2e8f0;
-      box-shadow:0 2px 12px rgba(0,0,0,.05);}
-    .menu-card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.06);
-      border:1px solid #f1f5f9;padding:2rem;transition:transform .22s ease,box-shadow .22s ease;
-      text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;}
-    .menu-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,.1);}
-    .menu-icon{width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;
-      font-size:1.8rem;margin-bottom:.75rem;box-shadow:inset 2px 2px 6px rgba(255,255,255,.8);}
-    .stat-box{background:#fff;border-radius:20px;border:1px solid #e2e8f0;padding:1.25rem 1.5rem;
-      box-shadow:0 5px 15px rgba(0,0,0,.04);display:flex;align-items:center;gap:1rem;
+
+    /* ── Nav ── */
+    .clay-nav{background:rgba(255,255,255,.97);backdrop-filter:blur(16px);
+      border-bottom:1px solid #e2e8f0;box-shadow:0 2px 12px rgba(0,0,0,.05);position:sticky;top:0;z-index:50;}
+    .nav-inner{max-width:900px;margin:0 auto;padding:0 20px;height:60px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;}
+
+    /* ── Stat cards ── */
+    .stat-box{background:#fff;border-radius:20px;border:1px solid #e2e8f0;padding:1.1rem 1.25rem;
+      box-shadow:0 4px 12px rgba(0,0,0,.04);display:flex;align-items:center;gap:1rem;
       transition:transform .2s;}
     .stat-box:hover{transform:translateY(-2px);}
-  
-    @media (max-width: 768px) {
-      .container, main { padding-left: 12px !important; padding-right: 12px !important; }
-      table { font-size: .78rem; }
-      th, td { padding: 8px 10px !important; }
-      .card { border-radius: 16px !important; }
+    .stat-icon{width:48px;height:48px;border-radius:16px;display:flex;align-items:center;
+      justify-content:center;font-size:1.5rem;flex-shrink:0;}
+
+    /* ── Menu cards ── */
+    .menu-card{background:#fff;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,.06);
+      border:1px solid #f1f5f9;padding:1.5rem 1.25rem;transition:transform .22s ease,box-shadow .22s ease;
+      text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;}
+    .menu-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.1);}
+    .menu-icon{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;
+      justify-content:center;font-size:1.6rem;margin-bottom:.6rem;}
+
+    /* ── Grid layout ── */
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+    .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+
+    /* ── TABLET (≤768px) ── */
+    @media(max-width:768px){
+      .stat-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+      .menu-grid{grid-template-columns:repeat(3,1fr);gap:10px;}
+      .stat-icon{width:40px;height:40px;font-size:1.2rem;border-radius:12px;}
+      .stat-box{padding:.85rem 1rem;gap:.75rem;border-radius:16px;}
+      .stat-box h3{font-size:1.4rem;}
+      .menu-card{padding:1.25rem .9rem;border-radius:16px;}
+      .menu-icon{width:46px;height:46px;font-size:1.3rem;border-radius:14px;margin-bottom:.4rem;}
+      .menu-card h2{font-size:.82rem;}
+      .menu-card p{font-size:.7rem;}
+      .menu-card span{font-size:.68rem;padding:3px 10px;}
+      main{padding:16px 14px 40px;}
     }
-    @media (max-width: 480px) {
-      th:nth-child(n+4), td:nth-child(n+4) { display: none; }
-      .btn-action { padding: 5px 8px !important; font-size: .7rem !important; }
+
+    /* ── MOBILE (≤480px) ── */
+    @media(max-width:480px){
+      .stat-grid{grid-template-columns:1fr;gap:8px;}
+      .stat-box{flex-direction:row;padding:.9rem 1rem;}
+      .menu-grid{grid-template-columns:1fr;gap:10px;}
+      .menu-card{flex-direction:row;text-align:left;align-items:center;padding:1rem 1.1rem;gap:14px;}
+      .menu-icon{margin-bottom:0;flex-shrink:0;width:44px;height:44px;}
+      .menu-card-body{display:flex;flex-direction:column;gap:2px;flex:1;}
+      .menu-card h2{font-size:.88rem;}
+      .menu-card p{font-size:.72rem;}
+      .menu-card span{align-self:flex-start;margin-top:4px;}
+      .nav-name{display:none;}
+      main{padding:14px 12px 40px;}
+    }
+
+    /* ── VERY SMALL (≤360px) ── */
+    @media(max-width:360px){
+      .nav-inner{padding:0 12px;}
+      .menu-card{padding:.85rem .9rem;gap:10px;}
     }
   </style>
 </head>
 <body>
-  <nav class="clay-nav sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-sm">⚙️</div>
+  <nav class="clay-nav">
+    <div class="nav-inner">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:12px;
+          display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">⚙️</div>
         <div>
-          <p class="font-extrabold text-gray-800 leading-tight">Admin Panel</p>
-          <p class="text-xs text-gray-400">UNS Medical Center</p>
+          <p style="font-weight:800;font-size:.92rem;color:#1e293b;line-height:1.2;">Admin Panel</p>
+          <p style="font-size:.7rem;color:#94a3b8;">UNS Medical Center</p>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <div class="hidden sm:block text-right">
-          <p class="text-sm font-bold text-gray-700"><?php echo htmlspecialchars($_SESSION['nama']); ?></p>
-          <p class="text-xs text-blue-500 font-semibold">Administrator</p>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="nav-name" style="text-align:right;">
+          <p style="font-size:.82rem;font-weight:700;color:#374151;"><?php echo htmlspecialchars($_SESSION['nama']); ?></p>
+          <p style="font-size:.68rem;color:#3b82f6;font-weight:600;">Administrator</p>
         </div>
         <button onclick="confirmLogout()"
-          class="text-xs font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl transition">
+          style="font-size:.78rem;font-weight:700;color:#fff;background:#ef4444;border:none;
+          padding:8px 14px;border-radius:10px;cursor:pointer;transition:background .2s;white-space:nowrap;"
+          onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">
           Logout
         </button>
       </div>
     </div>
   </nav>
 
-  <main class="max-w-5xl mx-auto px-4 py-8">
+  <main style="max-width:900px;margin:0 auto;padding:24px 20px 60px;">
 
     <!-- Header -->
-    <div class="mb-6">
-      <h1 class="text-2xl font-extrabold text-gray-800">Selamat datang, <?php echo htmlspecialchars(explode(' ', $_SESSION['nama'])[0]); ?>! 👋</h1>
-      <p class="text-gray-500 text-sm mt-1">Berikut ringkasan data sistem hari ini.</p>
+    <div style="margin-bottom:20px;">
+      <h1 style="font-size:1.4rem;font-weight:800;color:#1e293b;">
+        Selamat datang, <?php echo htmlspecialchars(explode(' ', $_SESSION['nama'])[0]); ?>! 👋
+      </h1>
+      <p style="font-size:.83rem;color:#94a3b8;margin-top:3px;">Berikut ringkasan data sistem hari ini.</p>
     </div>
 
     <!-- STAT BOXES -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="stat-grid">
       <div class="stat-box">
-        <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl flex-shrink-0">👥</div>
+        <div class="stat-icon" style="background:#eff6ff;">👥</div>
         <div>
-          <p class="text-xs text-gray-400 font-bold">Total Pasien</p>
-          <h3 class="text-2xl font-extrabold text-gray-800"><?php echo $total_users; ?></h3>
+          <p style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Total Pasien</p>
+          <h3 style="font-size:1.6rem;font-weight:800;color:#1e293b;line-height:1;"><?php echo $total_users; ?></h3>
         </div>
       </div>
       <div class="stat-box">
-        <div class="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center text-2xl flex-shrink-0">📊</div>
+        <div class="stat-icon" style="background:#f0fdf4;">📊</div>
         <div>
-          <p class="text-xs text-gray-400 font-bold">Total Survei</p>
-          <h3 class="text-2xl font-extrabold text-gray-800"><?php echo $total_survei; ?></h3>
+          <p style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Total Survei</p>
+          <h3 style="font-size:1.6rem;font-weight:800;color:#1e293b;line-height:1;"><?php echo $total_survei; ?></h3>
         </div>
       </div>
       <div class="stat-box">
-        <div class="w-12 h-12 rounded-2xl bg-yellow-100 flex items-center justify-center text-2xl flex-shrink-0">⭐</div>
+        <div class="stat-icon" style="background:#fefce8;">⭐</div>
         <div>
-          <p class="text-xs text-gray-400 font-bold">Indeks Kepuasan</p>
-          <h3 class="text-2xl font-extrabold text-gray-800"><?php echo $avg_global; ?><span class="text-sm text-gray-400">/5</span></h3>
+          <p style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Indeks Kepuasan</p>
+          <h3 style="font-size:1.6rem;font-weight:800;color:#1e293b;line-height:1;">
+            <?php echo $avg_global; ?><span style="font-size:.8rem;color:#94a3b8;font-weight:600;">/5</span>
+          </h3>
         </div>
       </div>
     </div>
 
     <!-- MENU CARDS -->
-    <h2 class="text-base font-bold text-gray-700 mb-4">Menu Pengelolaan</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <p style="font-size:.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;">
+      Menu Pengelolaan
+    </p>
+    <div class="menu-grid">
+
       <a href="/admin/kelola_user.php" class="menu-card group">
-        <div class="menu-icon bg-blue-50 group-hover:bg-blue-100 transition">👥</div>
-        <h2 class="font-extrabold text-gray-800">Kelola Pasien</h2>
-        <p class="text-xs text-gray-400">Lihat dan hapus data pasien terdaftar.</p>
-        <span class="mt-3 text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-          <?php echo $total_users; ?> Pasien →
-        </span>
+        <div class="menu-icon" style="background:#eff6ff;">👥</div>
+        <div class="menu-card-body">
+          <h2 style="font-weight:800;color:#1e293b;">Kelola Pasien</h2>
+          <p style="font-size:.75rem;color:#94a3b8;">Lihat dan hapus data pasien terdaftar.</p>
+          <span style="margin-top:8px;font-size:.72rem;font-weight:700;color:#2563eb;
+            background:#eff6ff;padding:4px 12px;border-radius:999px;display:inline-block;">
+            <?php echo $total_users; ?> Pasien →
+          </span>
+        </div>
       </a>
 
       <a href="/admin/kelola_admin.php" class="menu-card group">
-        <div class="menu-icon bg-purple-50 group-hover:bg-purple-100 transition">🛡️</div>
-        <h2 class="font-extrabold text-gray-800">Kelola Admin</h2>
-        <p class="text-xs text-gray-400">Tambah atau cabut akses administrator.</p>
-        <span class="mt-3 text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
-          Manajemen Akses →
-        </span>
+        <div class="menu-icon" style="background:#faf5ff;">🛡️</div>
+        <div class="menu-card-body">
+          <h2 style="font-weight:800;color:#1e293b;">Kelola Admin</h2>
+          <p style="font-size:.75rem;color:#94a3b8;">Tambah atau cabut akses administrator.</p>
+          <span style="margin-top:8px;font-size:.72rem;font-weight:700;color:#7c3aed;
+            background:#faf5ff;padding:4px 12px;border-radius:999px;display:inline-block;">
+            Manajemen Akses →
+          </span>
+        </div>
       </a>
 
       <a href="/admin/kelola_survei.php" class="menu-card group">
-        <div class="menu-icon bg-green-50 group-hover:bg-green-100 transition">📊</div>
-        <h2 class="font-extrabold text-gray-800">Laporan Survei</h2>
-        <p class="text-xs text-gray-400">Pantau dan analisis hasil penilaian pasien.</p>
-        <span class="mt-3 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">
-          <?php echo $total_survei; ?> Respons →
-        </span>
+        <div class="menu-icon" style="background:#f0fdf4;">📊</div>
+        <div class="menu-card-body">
+          <h2 style="font-weight:800;color:#1e293b;">Laporan Survei</h2>
+          <p style="font-size:.75rem;color:#94a3b8;">Pantau dan analisis hasil penilaian pasien.</p>
+          <span style="margin-top:8px;font-size:.72rem;font-weight:700;color:#16a34a;
+            background:#f0fdf4;padding:4px 12px;border-radius:999px;display:inline-block;">
+            <?php echo $total_survei; ?> Respons →
+          </span>
+        </div>
       </a>
-    </div>
 
+    </div>
   </main>
 
   <form id="form-logout" action="/proses/logout.php" method="POST" style="display:none;"></form>
