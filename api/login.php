@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/server/bootstrap.php";
 if (isset($_SESSION['email']) || isset($_SESSION['nik'])) {
-    header("Location: index.php");
+    header("Location: /index.php");
     exit();
 }
 
@@ -52,6 +52,13 @@ unset($_SESSION['flash']);
     .modal-overlay.show{display:flex;}
     @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
     .pop-in{animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both;}
+  @media (max-width: 480px) {
+    .clay-card { border-radius: 20px; }
+    body { padding: 1rem 0.75rem; }
+  }
+  @media (max-width: 400px) {
+    .kat-reg-box { padding: 8px 10px !important; font-size: .75rem !important; }
+  }
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen px-3 py-8 relative overflow-x-hidden">

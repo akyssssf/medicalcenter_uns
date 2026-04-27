@@ -48,6 +48,17 @@ unset($_SESSION['flash']);
     .btn-del{background:#fef2f2;color:#ef4444;border:1.5px solid #fecaca;padding:6px 14px;border-radius:10px;
       font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s;border:none;}
     .btn-del:hover{background:#ef4444;color:white;}
+  
+    @media (max-width: 768px) {
+      .container, main { padding-left: 12px !important; padding-right: 12px !important; }
+      table { font-size: .78rem; }
+      th, td { padding: 8px 10px !important; }
+      .card { border-radius: 16px !important; }
+    }
+    @media (max-width: 480px) {
+      th:nth-child(n+4), td:nth-child(n+4) { display: none; }
+      .btn-action { padding: 5px 8px !important; font-size: .7rem !important; }
+    }
   </style>
 </head>
 <body>

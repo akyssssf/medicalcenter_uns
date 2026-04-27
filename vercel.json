@@ -5,10 +5,10 @@
     }
   },
   "routes": [
-  { "src": "/proses/(.+)", "dest": "/api/proses/$1" },
-  { "src": "/admin/(.+)",  "dest": "/api/admin/$1" },
-  { "src": "/(.*\\.php)",  "dest": "/api/$1" },
-  { "src": "/",            "dest": "/api/index.php" },
-  { "src": "/(.*)",        "dest": "/api/$1.php" }
-]
+    { "src": "/proses/(.+)", "dest": "/api/proses/$1" },
+    { "src": "/admin/(.+)",  "dest": "/api/admin/$1" },
+    { "src": "/(.*\\.php)", "dest": "/api/$1" },
+    { "src": "/",            "dest": "/api/index.php" },
+    { "src": "/(.*)",        "dest": "/api/$1.php" }
+  ]
 }

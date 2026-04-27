@@ -146,10 +146,19 @@ $inisial = strtoupper(substr(trim($nama), 0, 1));
     /* ── Jalur Cards ── */
     .jalur-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; animation: fadeUp .4s .14s ease both; }
 
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .jalur-grid { grid-template-columns: 1fr; }
       .guide-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
       .g-name { font-size: 1.3rem; }
+      main { padding: 16px 12px 60px; }
+      .greeting { padding: 20px; }
+      .nav-user-info { display: none; }
+      .riwayat-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .btn-riwayat { width: 100%; justify-content: center; }
+      .jalur-card { padding: 18px 14px; }
+      .g-date-row { flex-wrap: wrap; }
     }
 
     .jalur-card {

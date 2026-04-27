@@ -4,9 +4,9 @@ require_once __DIR__ . "/server/bootstrap.php";
 if (!isset($_SESSION['nik'])) { header("Location: /login.php"); exit(); }
 
 $jalur = $_SESSION['jalur_survei'] ?? null;
-if (!$jalur) { header("Location: dashboard.php"); exit(); }
+if (!$jalur) { header("Location: /dashboard.php"); exit(); }
 if ($jalur === 'kunjungan' && !isset($_SESSION['id_kunjungan_aktif'])) {
-    header("Location: dashboard.php"); exit();
+    header("Location: /dashboard.php"); exit();
 }
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -390,6 +390,27 @@ $total_steps = $is_kunjungan ? 3 : 3;
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 99px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      main { padding: 16px 12px 60px; }
+      .identity-card { padding: 12px 14px; gap: 10px; }
+      .id-name { font-size: .9rem; }
+      .id-badge { font-size: .55rem; padding: 3px 6px; }
+      .kat-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+      .emoji-row { gap: 4px; }
+      .emoji-box { padding: 6px 2px; }
+      .e-icon { font-size: 1.2rem; }
+      .e-lbl { font-size: .5rem; }
+      .nps-grid { gap: 3px; }
+      .nps-box { width: 32px; height: 32px; font-size: .72rem; }
+      .card-body { padding: 14px 14px; }
+      .info-row { flex-direction: column; }
+      .info-field { min-width: unset; }
+      .chk-grid { grid-template-columns: 1fr; }
+      .nav-inner { padding: 0 12px; }
+      .prog-pill-text { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -869,7 +890,7 @@ function confirmExit() {
     cancelButtonText: 'Lanjut Isi',
     confirmButtonColor: '#ef4444',
     cancelButtonColor: '#2563eb',
-  }).then(r => { if (r.isConfirmed) window.location.href = 'dashboard.php'; });
+  }).then(r => { if (r.isConfirmed) window.location.href = '/dashboard.php'; });
 }
 
 updateNav(); updateBar();

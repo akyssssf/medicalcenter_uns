@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/server/bootstrap.php";
 
-if (!isset($_SESSION['nik'])) { header("Location: login.php"); exit(); }
+if (!isset($_SESSION['nik'])) { header("Location: /login.php"); exit(); }
 
 $nik  = $_SESSION['nik'];
 $nama = $_SESSION['nama'];
@@ -255,6 +255,16 @@ foreach ($kunjungan_list as $k) {
       z-index: 9999; animation: fadeUp .2s ease;
       box-shadow: 0 8px 24px rgba(15,23,42,.3);
     }
+  @media (max-width: 640px) {
+    main { padding: 16px 10px 60px; }
+    .nav-inner { padding: 0 12px; }
+    .nav-user { display: none; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .kunjungan-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .token-code { font-size: .75rem; padding: 4px 8px; }
+    .kunjungan-meta { flex-direction: column; gap: 6px; }
+    .kunjungan-actions { flex-direction: column; }
+  }
   </style>
 </head>
 <body>

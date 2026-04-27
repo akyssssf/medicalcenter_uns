@@ -94,6 +94,17 @@ $pct_puas = $total_resp > 0 ? round($puas / $total_resp * 100) : 0;
       font-size:.84rem;vertical-align:middle;}
     .styled-table tbody tr:hover{background:#f8fafc;}
     @media print{.no-print{display:none!important;}}
+  
+    @media (max-width: 768px) {
+      .container, main { padding-left: 12px !important; padding-right: 12px !important; }
+      table { font-size: .78rem; }
+      th, td { padding: 8px 10px !important; }
+      .card { border-radius: 16px !important; }
+    }
+    @media (max-width: 480px) {
+      th:nth-child(n+4), td:nth-child(n+4) { display: none; }
+      .btn-action { padding: 5px 8px !important; font-size: .7rem !important; }
+    }
   </style>
 </head>
 <body>

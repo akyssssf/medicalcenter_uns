@@ -95,6 +95,17 @@ unset($_SESSION['flash']);
     .btn-primary{background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;font-weight:700;
       padding:0.75rem 1.5rem;border-radius:12px;transition:.2s;cursor:pointer;border:none;width:100%;}
     .btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(37,99,235,.3);}
+  
+    @media (max-width: 768px) {
+      .container, main { padding-left: 12px !important; padding-right: 12px !important; }
+      table { font-size: .78rem; }
+      th, td { padding: 8px 10px !important; }
+      .card { border-radius: 16px !important; }
+    }
+    @media (max-width: 480px) {
+      th:nth-child(n+4), td:nth-child(n+4) { display: none; }
+      .btn-action { padding: 5px 8px !important; font-size: .7rem !important; }
+    }
   </style>
 </head>
 <body>

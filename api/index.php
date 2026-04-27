@@ -37,12 +37,6 @@ unset($_SESSION['flash']);
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>UNS Medical Center — Survei Kepuasan Pasien</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     *{font-family:'Plus Jakarta Sans',sans-serif;box-sizing:border-box;margin:0;padding:0;}
     body{background:linear-gradient(135deg,#dbeafe 0%,#e0f2fe 45%,#f0fdf4 100%);min-height:100vh;overflow-x:hidden;}
@@ -152,6 +146,14 @@ unset($_SESSION['flash']);
     .cta-banner::before{content:'';position:absolute;inset:0;
       background:radial-gradient(ellipse at center,rgba(255,255,255,.06),transparent 70%);
       pointer-events:none;}
+  @media (max-width: 640px) {
+    .poli-slide { padding: 10px 12px; }
+    .hero-bg { border-radius: 20px; }
+    .clay-card { border-radius: 20px; }
+  }
+  @media (max-width: 480px) {
+    .stat-pill { padding: .3rem .6rem; font-size: .65rem; }
+  }
   </style>
 </head>
 <body class="overflow-x-hidden">
