@@ -86,7 +86,10 @@ unset($_SESSION['flash']);
     <div class="flex-1 p-8 lg:p-12 relative z-20 bg-white">
       <div class="mobile-logo-wrap lg:hidden">
         <img src="https://senirupa.fkip.uns.ac.id/wp-content/uploads/2021/07/logo_putih.png" class="h-8 object-contain flex-shrink-0"/>
-        <div><span>UNS Medical Center</span><small>Survei Kepuasan Pasien</small></div>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+        <span>UNS Medical Center</span>
+        <small>Survei Kepuasan Pasien</small>
+      </div>
       </div>
 
       <h1 class="font-extrabold text-gray-800 text-xl sm:text-2xl mb-1">Selamat Datang 👋</h1>
