@@ -89,6 +89,14 @@ unset($_SESSION['flash']);
         <div style="display:flex;flex-direction:column;gap:2px;"><span>UNS Medical Center</span><small>Survei Kepuasan Pasien</small></div>
       </div>
 
+      <a href="/index.php" style="display:inline-flex;align-items:center;gap:6px;
+        font-size:.78rem;font-weight:700;color:#64748b;text-decoration:none;
+        background:#f1f5f9;border-radius:10px;padding:6px 12px;margin-bottom:16px;
+        transition:all .18s;" onmouseover="this.style.background='#e2e8f0'"
+        onmouseout="this.style.background='#f1f5f9'">
+        ← Kembali ke Beranda
+      </a>
+
       <h1 class="font-extrabold text-gray-800 text-xl sm:text-2xl mb-1">Selamat Datang 👋</h1>
       <p class="text-gray-400 text-sm mb-5">Masuk atau buat akun untuk mengisi survei kepuasan pasien.</p>
 
