@@ -263,10 +263,10 @@ unset($_SESSION['flash']);
                 class="clay-btn bg-white text-blue-800 px-6 py-3 text-sm">
                 Login &amp; Isi Survei →
               </button>
-              <button onclick="location.href='/login.php'"
+              <button onclick="showComingSoon()"
                 class="px-6 py-3 text-sm font-bold text-white border-2 border-white/30
                   rounded-2xl hover:bg-white/10 transition">
-                Daftar Akun
+                🚧 Daftar Akun
               </button>
             <?php endif; ?>
           </div>
@@ -1254,6 +1254,31 @@ function fetchDataBPS() {
 }
 
 document.addEventListener('DOMContentLoaded', () => { fetchDataBPS(); });
+
+/* ══════════════════════════════════════════
+   COMING SOON — Daftar Akun
+══════════════════════════════════════════ */
+function showComingSoon() {
+  Swal.fire({
+    icon: 'info',
+    title: '🚧 Segera Hadir!',
+    html: `
+      <div style="text-align:left;color:#475569;font-size:.9rem;line-height:1.8">
+        <p style="margin-bottom:12px">Fitur <strong>pendaftaran online</strong> sedang dalam pengembangan dan akan segera tersedia.</p>
+        <p style="margin-bottom:8px">Untuk sementara, pendaftaran dapat dilakukan <strong>langsung di loket:</strong></p>
+        <div style="background:#eff6ff;border-radius:14px;padding:12px 14px;margin-top:8px;font-size:.85rem;border:1px solid #bfdbfe">
+          📍 Jl. Ir. Sutami No.36A, Kentingan, Surakarta<br>
+          📞 (0271) 646994<br>
+          ✉️ medicalcenter@uns.ac.id<br>
+          🕐 Senin–Jumat: 07.00–21.00 WIB
+        </div>
+      </div>`,
+    confirmButtonText: 'Siap, Terima Kasih! 👍',
+    confirmButtonColor: '#2563eb',
+    background: '#fff',
+    customClass: { popup: 'swal-rounded' }
+  });
+}
 
 </script>
 </body>
