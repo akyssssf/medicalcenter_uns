@@ -263,10 +263,10 @@ unset($_SESSION['flash']);
                 class="clay-btn bg-white text-blue-800 px-6 py-3 text-sm">
                 Login &amp; Isi Survei →
               </button>
-              <button onclick="showComingSoon()"
+              <button onclick="location.href='/login.php'"
                 class="px-6 py-3 text-sm font-bold text-white border-2 border-white/30
                   rounded-2xl hover:bg-white/10 transition">
-                🚧 Daftar Akun
+                Daftar Akun
               </button>
             <?php endif; ?>
           </div>
@@ -352,12 +352,12 @@ unset($_SESSION['flash']);
         </div>
 
         <!-- CTA Daftar -->
-        <a href="#daftar"
+        <button onclick="showComingSoon()"
           class="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600
             hover:from-blue-600 hover:to-blue-700 text-white text-sm font-bold py-3 rounded-2xl
-            shadow-md hover:shadow-lg transition-all active:scale-95">
+            shadow-md hover:shadow-lg transition-all active:scale-95 w-full">
           📋 Daftar Antrian Sekarang
-        </a>
+        </button>
 
         <!-- Quote Rotator -->
         <div class="mt-auto bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100 rounded-xl p-3">
